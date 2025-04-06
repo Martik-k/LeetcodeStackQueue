@@ -13,12 +13,6 @@ class Node:
         self.item = item
         self.next = next_node
 
-    def __repr__(self):
-        """
-        Returns a string representation of the Node's item.
-        """
-        return str(self.item)
-
 
 class Stack:
     """
@@ -29,19 +23,6 @@ class Stack:
         Initializes an empty Stack.
         """
         self.head = None
-
-    def __repr__(self):
-        """
-        Returns a string representation of the Stack.
-        """
-        if self.is_empty():
-            return 'None'
-        result = f'{self.head}'
-        cur = self.head.next
-        while cur:
-            result += f' - {cur}'
-            cur = cur.next
-        return result
 
     def is_empty(self):
         """
@@ -59,7 +40,9 @@ class Stack:
         """
         Returns the top item of the Stack without removing it.
         """
-        return self.head
+        if self.is_empty():
+            raise ValueError('Stack is empty')
+        return self.head.item
 
     def pop_from_top(self):
         """
@@ -67,9 +50,9 @@ class Stack:
         """
         if self.is_empty():
             raise ValueError('Stack is empty')
-        head = self.head
+        result = self.head.item
         self.head = self.head.next
-        return head
+        return result
 
     def size(self):
         """
@@ -84,23 +67,42 @@ class Stack:
 
 
 class MyQueue:
-
+    """
+    Implementation of a Queue using two Stacks.
+    """
     def __init__(self):
-        pass
-        
+        """
+        Initializes a MyQueue object with two stacks: the main queue and a supporting stack.
+        """
+        self.queue = Stack()
+        self.supporting = Stack()
 
     def push(self, x: int) -> None:
-        pass
-        
+        """
+        Adds element 'x' to the end of the queue.
+        """
+        while not self.queue.is_empty():
+            node = self.queue.pop_from_top()
+            self.supporting.push_to_top(node)
+        self.queue.push_to_top(x)
+        while not self.supporting.is_empty():
+            node = self.supporting.pop_from_top()
+            self.queue.push_to_top(node)
 
     def pop(self) -> int:
-        pass
-        
+        """
+        Removes and returns the first element from the queue.
+        """
+        return self.queue.pop_from_top()
 
     def peek(self) -> int:
-        pass
-        
+        """
+        Returns the first element of the queue without removing it.
+        """
+        return self.queue.peek()
 
     def empty(self) -> bool:
-        pass
-        
+        """
+        Checks if the queue is empty.
+        """
+        return self.queue.is_empty()
