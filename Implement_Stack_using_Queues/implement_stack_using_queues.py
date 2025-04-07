@@ -71,3 +71,45 @@ class Queue:
             while cur.next:
                 cur = cur.next
             cur.next = Node(x)
+
+
+class MyStack:
+    """
+    A Stack class implemented using two queues.
+    """
+    def __init__(self):
+        """
+        Initializes an empty Stack using two queues.
+        """
+        self.stack = Queue()
+        self.supporting = Queue()
+
+    def push(self, x: int) -> None:
+        """
+        Pushes an element onto the stack.
+        """
+        while not self.stack.is_empty():
+            node = self.stack.pop_from_front()
+            self.supporting.push_to_back(node)
+        self.stack.push_to_back(x)
+        while not self.supporting.is_empty():
+            node = self.supporting.pop_from_front()
+            self.stack.push_to_back(node)
+
+    def pop(self) -> int:
+        """
+        Removes and returns the element at the top of the stack.
+        """
+        return self.stack.pop_from_front()
+
+    def top(self) -> int:
+        """
+        Returns the element at the top of the stack without removing it.
+        """
+        return self.stack.peek_from_front()
+
+    def empty(self) -> bool:
+        """
+        Checks if the stack is empty.
+        """
+        return self.stack.is_empty()
